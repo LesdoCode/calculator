@@ -10,7 +10,8 @@ const divide = (num1, num2) => num1 / num2;
 const modulus = (num1, num2) => num1 % num2;
 const clear = () => {
 	display.innerHTML = 0;
-	numberList = operationList = [];
+	numberList = [];
+	operationList = [];
 };
 
 let numberList = [];
@@ -33,34 +34,36 @@ function handleNumberClick(button) {
 	updateDisplay(value);
 }
 
+function addNextCalculation(operator, number) {
+	operationList.push(operator);
+	numberList.push(number);
+}
+
 function handleOperatorClick(button) {
 	const value = button.innerHTML;
+	const numberOnScreen = parseFloat(display.innerHTML);
 
 	switch (value) {
 		case "%":
-			operationList.push(modulus);
-			numberList.push(parseFloat(display.innerHTML));
+			addNextCalculation(modulus, numberOnScreen);
 			break;
 		case "+":
-			operationList.push(add);
-			numberList.push(parseFloat(display.innerHTML));
+			addNextCalculation(add, numberOnScreen);
 			break;
 		case "-":
-			operationList.push(subtract);
-			numberList.push(parseFloat(display.innerHTML));
+			addNextCalculation(subtract, numberOnScreen);
 			break;
 		case "*":
-			operationList.push(multiply);
-			numberList.push(parseFloat(display.innerHTML));
+			addNextCalculation(multiply, numberOnScreen);
 			break;
 		case "/":
-			operationList.push(divide);
-			numberList.push(parseFloat(display.innerHTML));
+			addNextCalculation(divide, numberOnScreen);
+			break;
 		case "=":
-			calculateAll();
-			return;
+			return calculateAll();
 	}
 	display.innerHTML = "0";
+	console.log("in handleOperatorClick", numberList, ...operationList);
 }
 
 function handleControlClick(button) {
@@ -101,10 +104,14 @@ function calculateAll() {
 	const len = operationList.length;
 
 	for (let i = 0; i < len; i++) {
-		console.log(i, operationList.length);
-		result = operationList.shift()(result, numberList.shift());
+		const operation = operationList.shift();
+		const number = numberList.shift();
+		console.log("operation is", operation);
+		console.log("nums are", result, number);
+		result = operation(result, number);
 	}
 	display.innerHTML = result;
+	console.log(numberList, operationList);
 }
 
 buttonGrid.addEventListener("click", handleButtonGridClick);
@@ -112,3 +119,17 @@ buttonGrid.addEventListener("click", handleButtonGridClick);
 backspaceButton.addEventListener("click", () => {
 	updateDisplay(display.innerHTML.slice(0, -1), true);
 });
+
+function openFullscreen() {
+	const elem = document.querySelector(".calculator");
+	if (elem.requestFullscreen) {
+		elem.requestFullscreen();
+	} else if (elem.webkitRequestFullscreen) {
+		/* Safari */
+		elem.webkitRequestFullscreen();
+	} else if (elem.msRequestFullscreen) {
+		/* IE11 */
+		elem.msRequestFullscreen();
+	}
+}
+document.addEventListener("dblclick", openFullscreen);
