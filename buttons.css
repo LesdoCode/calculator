@@ -1,0 +1,29 @@
+.button-grid {
+	background: rgb(192, 192, 192);
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	grid-template-rows: repeat(5, 1fr);
+	grid-gap: 1%;
+	grid-gap: 1px;
+	height: 80%;
+}
+
+.button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.button:hover {
+	background-color: rgb(196, 196, 196);
+	cursor: pointer;
+}
+
+.button-number {
+	background-color: rgb(226, 226, 226);
+}
+
+.button-operator,
+.button-control {
+	background-color: rgb(105, 189, 97);
+}
